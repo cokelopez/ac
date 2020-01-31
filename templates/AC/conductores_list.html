@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block content %}
+<title>Conductores</title>
+<div class="container">
+  <div class="table-responsive-sm  pt-3">
+    <table id='tablaconductores' class='table table-bordered table-hover'>
+      <thead class="thead-light">
+        <th colspan="5">
+          <h3><br>Conductores</h3>
+        </th>
+        <tr>
+          <th>Select</th>
+          <th>Nombres</th>
+          <th>Apellidos<i class="fa fa-fw fa-sort"></i></th>
+          <th>Telefono<i class="fa fa-fw fa-sort"></i></th>
+          <th>Actions</i></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for conductor in object_list %}
+        <tr>
+          <td><input type="checkbox" name='conductor'></td>
+          <td>{{conductor.nombres}}</td>
+          <td>{{conductor.apellidos}}</td>
+          <td>{{conductor.telefono}}</td>
+          <td><i class="fas fa-trash-alt"></i><i class="fas fa-edit pl-2"></i></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="modal fade" id="modal-book">
+    <div class="modal-dialog">
+      <div class="modal-content">
+      </div>
+    </div>
+</div>
+
+
+{% endblock %}
