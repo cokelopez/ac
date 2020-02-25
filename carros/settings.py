@@ -44,6 +44,8 @@ INSTALLED_APPS = [
     "django_tables2",
     'bootstrap_modal_forms',
     'widget_tweaks',
+    'django_filters',
+
 ]
 
 MIDDLEWARE = [
@@ -54,6 +56,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
+
 ]
 
 ROOT_URLCONF = 'carros.urls'

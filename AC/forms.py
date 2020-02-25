@@ -1,5 +1,6 @@
 from django import forms
-from .models import Conductores, Propietarios, Carros, Polizas
+from .models import Conductores, Propietarios, Carros, Polizas, Gasto, Pagos, Renta
+import datetime
 
 
 class PostConductores(forms.ModelForm):
@@ -57,4 +58,70 @@ class EditPolizas(forms.ModelForm):
                   'fin_poliza', 'documento')
         widgets = {'inicio_poliza': forms.DateInput(attrs={'type': 'date'}),
                    'fin_poliza': forms.DateInput(attrs={'type': 'date'})
+                   }
+
+
+class PostGasto(forms.ModelForm):
+    class Meta:
+        model = Gasto
+        fields = ('monto', 'iva', 'fecha', 'gasto', 'carro', 'factura')
+
+
+class EditGasto(forms.ModelForm):
+
+    class Meta:
+        model = Gasto
+        fields = ('monto', 'iva', 'fecha', 'gasto', 'carro', 'factura')
+        widgets = {'fecha': forms.DateInput(attrs={'type': 'date'})
+                   }
+
+
+class PostPagos(forms.ModelForm):
+
+    def clean_fecha(self):
+        fecha = self.cleaned_data['fecha']
+
+        if fecha > datetime.date.today():
+            raise forms.ValidationError(
+                'La Fecha no puede ser mayor al día de hoy')
+        return fecha
+
+    class Meta:
+        model = Pagos
+        fields = ('carro', 'pago', 'fecha', 'semana', 'renta')
+        widgets = {'fecha': forms.DateInput(attrs={'type': 'date'}),
+                   'semana': forms.DateInput(attrs={'type': 'week'})
+                   }
+
+
+class AgregarPagoTransaccionExistente(forms.ModelForm):
+
+    def __init__(self, *args, **kwargs):
+        self.carro = kwargs.pop('carro')
+        self.semana = kwargs.pop('semana')
+        super(AgregarPagoTransaccionExistente, self).__init__(*args, **kwargs)
+
+    class Meta:
+        model = Pagos
+        fields = ('carro', 'pago', 'fecha', 'semana', 'renta')
+        widgets = {'fecha': forms.DateInput(attrs={'type': 'date'}),
+                   'semana': forms.DateInput(attrs={'type': 'week'})
+                   }
+
+
+class EditPagos(forms.ModelForm):
+
+    def clean(self):
+        cleaned_data = super(EditPagos, self).clean()
+        fecha = cleaned_data.get('fecha')
+        hoy = datetime.date.today()
+        if fecha > hoy:
+            raise forms.ValidationError(
+                'La Fecha no puede ser mayor al día de hoy')
+
+    class Meta:
+        model = Pagos
+        fields = ('carro', 'pago', 'fecha', 'semana', 'renta')
+        widgets = {'fecha': forms.DateInput(attrs={'type': 'date'}),
+                   'semana': forms.DateInput(attrs={'type': 'week'})
                    }

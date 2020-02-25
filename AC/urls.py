@@ -2,6 +2,11 @@ from django.conf import settings
 from django.urls import path
 from . import views
 from django.conf.urls.static import static
+from django_filters.views import FilterView
+from .filters import PagosFilter
+from .models import Pagos
+
+from . import filters
 
 urlpatterns = [
     path('', views.index, name='index'),
@@ -14,7 +19,7 @@ urlpatterns = [
          views.ConductoresUpdate.as_view(), name='conductor_edit'),
     path('drivers/<int:pk>/borrar/',
          views.ConductoresDelete.as_view(), name='conductor_borrar'),
-    path('owners/', views.ConductoresListView.as_view(), name='propietarios'),
+    path('owners/', views.PropietariosListView.as_view(), name='propietarios'),
     path('owners/add/', views.PropietariosCreate.as_view(), name='propietario_new'),
     path('owners/<int:pk>/',
          views.PropietariosUpdate.as_view(), name='propietario_edit'),
@@ -34,10 +39,22 @@ urlpatterns = [
     path('insurance/<int:pk>/borrar/',
          views.PolizaDelete.as_view(), name='poliza_borrar'),
 
-    # path('conductores_sort/<str:sort>/',
-    #      views.conductores_sort.as_view(), name='conductores_sort'),
+    path('expenses/', views.GastoListView.as_view(), name='gasto'),
+    path('expenses/add/', views.GastoCreate.as_view(), name='gasto_new'),
+    path('expenses/<int:pk>/',
+         views.GastoUpdate.as_view(), name='gasto_edit'),
+    path('expenses/<int:pk>/borrar/',
+         views.GastoDelete.as_view(), name='gasto_borrar'),
 
-    # API URL's
+    path('payments/', views.PagosListView.as_view(model=Pagos), name='pagos'),
+    path('payments/addtoexistingweek/<int:carro>/<slug:semana>',
+         views.AgregarPagoSemana.as_view(), name='pago_existente'),
+    path('payments/add/', views.PagosCreate.as_view(), name='pagos_new'),
+    path('paymentsbycarandweek/<int:carro>/<slug:semana>',
+         views.PagosDetailView.as_view(), name='pagos_bycar'),
+    path('payments/<int:pk>/borrar/',
+         views.PagosDelete.as_view(), name='pagos_borrar'),
+
     path('api/conductores', views.ListaConductores.as_view()),
     path('api/carros', views.ListaCarros.as_view()),
     path('api/polizas', views.ListaPolizas.as_view()),

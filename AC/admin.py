@@ -1,12 +1,11 @@
 from django.contrib import admin
-from .models import Conductores, Carros, Polizas, Propietarios, TipoGasto, Gasto, Renta, Semanas, Pagos
+from .models import Conductores, Carros, Polizas, Propietarios, TipoGasto, Gasto, Renta, Pagos
 
 admin.site.register(Carros)
 
 admin.site.register(Polizas)
 admin.site.register(Propietarios)
 admin.site.register(TipoGasto)
-admin.site.register(Semanas)
 admin.site.register(Pagos)
 
 

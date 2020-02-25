@@ -101,7 +101,7 @@ class Polizas(models.Model):
         return reverse('polizas')
 
 
-class TipoGasto (models.Model):
+class TipoGasto(models.Model):
 
     nombre = models.CharField(max_length=20)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -131,15 +131,8 @@ class Gasto(models.Model):
         verbose_name_plural = 'Gastos'
         ordering = ['fecha']
 
-
-class Semanas(models.Model):
-
-    diainicio = models.DateField(
-        auto_now=False, auto_now_add=False, blank=False, null=False)
-    diafin = models.DateField(
-        auto_now=False, auto_now_add=False, blank=False, null=False)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    def get_absolute_url(self):
+        return reverse('gasto')
 
 
 class Renta(models.Model):
@@ -163,8 +156,13 @@ class Pagos(models.Model):
     carro = models.ForeignKey(
         Carros, on_delete=models.CASCADE, blank=False, null=False)
     pago = models.DecimalField(max_digits=6, decimal_places=2)
-    semana = models.ForeignKey(
-        Semanas, on_delete=models.PROTECT, blank=False, null=False)
+    fecha = models.DateField(
+        auto_now=False, auto_now_add=False, blank=True, null=True)
+    semana = models.CharField(max_length=20)
+    startweek = models.DateField(
+        auto_now=False, auto_now_add=False, blank=True, null=True)
+    endweek = models.DateField(
+        auto_now=False, auto_now_add=False, blank=True, null=True)
     renta = models.ForeignKey(
         Renta, on_delete=models.PROTECT, blank=False, null=False)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -172,3 +170,9 @@ class Pagos(models.Model):
 
     class Meta:
         verbose_name_plural = "Pagos"
+
+    def get_absolute_url(self):
+        return reverse('pagos')
+
+    def __str__(self):
+        return self.semana
