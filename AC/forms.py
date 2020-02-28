@@ -1,5 +1,6 @@
 from django import forms
-from .models import Conductores, Propietarios, Carros, Polizas, Gasto, Pagos, Renta
+from django.core.exceptions import ValidationError
+from .models import Conductores, Propietarios, Carros, Polizas, Gasto, Pagos, Renta, Inactividad
 import datetime
 
 
@@ -125,3 +126,20 @@ class EditPagos(forms.ModelForm):
         widgets = {'fecha': forms.DateInput(attrs={'type': 'date'}),
                    'semana': forms.DateInput(attrs={'type': 'week'})
                    }
+
+
+class AdminInactividad(forms.ModelForm):
+
+    def clean(self):
+        clean_data = super(AdminInactividad, self).clean()
+        carro = clean_data.get('carro')
+        activo = Carros.objects.values_list(
+            'is_active', flat=True).filter(nombre=carro)
+
+        print(activo)
+        if activo[0]:
+            raise forms.ValidationError('El Auto está activo')
+
+    class Meta:
+        model = Inactividad
+        fields = ('razon', 'carro', 'fecha_inicio', 'fecha_fin')

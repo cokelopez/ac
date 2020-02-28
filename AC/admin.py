@@ -1,5 +1,6 @@
 from django.contrib import admin
-from .models import Conductores, Carros, Polizas, Propietarios, TipoGasto, Gasto, Renta, Pagos
+from .models import Conductores, Carros, Polizas, Propietarios, TipoGasto, Gasto, Renta, Pagos, Inactividad
+from .forms import AdminInactividad
 
 admin.site.register(Carros)
 
@@ -33,3 +34,10 @@ class ConductoresAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Conductores, ConductoresAdmin)
+
+
+class InactividadAdmin(admin.ModelAdmin):
+    form = AdminInactividad
+
+
+admin.site.register(Inactividad, InactividadAdmin)

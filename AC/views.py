@@ -245,8 +245,7 @@ class PagosCreate(CreateView):
         fixed_rent = self.get_renta(carrent)
         past_payments = Pagos.objects.filter(
             carro_id=intended_paymentcar, semana=intended_paymentweek).aggregate(total=Coalesce(Sum('pago'), 0))['total']
-        print(intended_paymentcar, intended_paymentweek,
-              past_payments, intended_payment, fixed_rent)
+
         if (past_payments + intended_payment) <= fixed_rent:
             validation = 1
             return validation

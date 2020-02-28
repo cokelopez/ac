@@ -1,6 +1,7 @@
 from django.db import models
 from django.core.validators import RegexValidator
 from django.urls import reverse
+from django.core.exceptions import ValidationError
 # Create your models here.
 
 
@@ -64,6 +65,7 @@ class Carros(models.Model):
     conductor = models.ForeignKey(
         Conductores, on_delete=models.SET_NULL, blank=True, null=True)
     propietario = models.ForeignKey(Propietarios, on_delete=models.CASCADE)
+    is_active = models.BooleanField(blank=False, null=False, default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -176,3 +178,18 @@ class Pagos(models.Model):
 
     def __str__(self):
         return self.semana
+
+
+class Inactividad(models.Model):
+    razon = models.CharField(max_length=20)
+    carro = models.ForeignKey(
+        Carros, on_delete=models.CASCADE, blank=True, null=True)
+    fecha_inicio = models.DateField(
+        auto_now=False, auto_now_add=False, blank=True, null=True)
+    fecha_fin = models.DateField(
+        auto_now=False, auto_now_add=False, blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name_plural = "Razon de Inactividad"

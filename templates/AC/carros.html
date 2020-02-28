@@ -7,12 +7,12 @@
 {% block content %}
 <div class="container">
     <h1 class="page-header">Vehículos</h1>
-    <p class="pt-3">
+    {% comment %} <p class="pt-3">
         <a href={% url 'carros_new' %}><button type="button" class="btn btn-primary" >
 
             Conductor
         </button></a>
-    </p>
+    </p> {% endcomment %}
 
     {% render_table table %}
 </div>
