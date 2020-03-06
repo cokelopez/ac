@@ -41,7 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'AC',
-    "django_tables2",
+    'django_tables2',
     'bootstrap_modal_forms',
     'widget_tweaks',
     'django_filters',

@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container">
+    <div class="row mt-1">
+        <div class="col-sm-6">
+            <div class="card w-50">
+                <div class="card-body">
+                    <h5 class="card-title">Carros</h5>
+                    <div class="tg-wrap">
+                        <table class="tg">
+                            <tr>
+                                <td class="tg-0lax">Carros Activos</td>
+                                <td class="tg-0lax">{{ estatusactivos.activos }}</td>
+                            </tr>
+                            <tr>
+                                <td class="tg-0lax">Carros Inactivos</td>
+                                <td class="tg-0lax">{{ estatusinactivos.inactivos }}</td>
+                            </tr>
+                            <tr>
+                                <td class="tg-0lax">Total</td>
+                                <td class="tg-0lax">{{ totaldecarros.count }}</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <a href="{% url 'carros' %}" class="btn btn-primary">Carros</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="card w-50">
+                <div class="card-body">
+                    <h5 class="card-title">Semana Pasada</h5>
+                    <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                    <a href="#" class="btn btn-primary">Go somewhere</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 mt-1">
+            <div class="card w-50">
+                <div class="card-body">
+                    <h5 class="card-title">Pagos Incompletos</h5>
+                    <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                    <a href="#" class="btn btn-primary">Go somewhere</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

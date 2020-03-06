@@ -13,9 +13,10 @@ from .models import Conductores, Carros, Polizas, Propietarios, TipoGasto, Renta
 from .serializers import ConductoresSerializer, CarrosSerializer, PolizasSerializer, PropietariosSerializer, TipoGastoSerializer, RentasSerializer
 from django_tables2 import SingleTableView, SingleTableMixin
 from django_filters.views import FilterView
-from .filters import PagosFilter
+from .filters import PagosFilter, ConductoresFilter
 from .tables import ConductoresTable, PropietariosTable, CarrosTable, PolizasTable, GastosTable, PagosTable, PagosDetailTable
 from .forms import PostConductores, EditConductores, PostPropietarios, EditPropietarios, PostCarros, EditCarros, PostPolizas, EditPolizas, PostGasto, EditGasto, PostPagos, EditPagos, AgregarPagoTransaccionExistente
+from django.db.models import Sum, Count, Case, When
 # Views
 
 
@@ -25,10 +26,11 @@ def index(request):
 
 # API views
 
-class ConductoresListView(SingleTableView):
-    model = Conductores
+class ConductoresListView(SingleTableMixin, FilterView):
+
     table_class = ConductoresTable
     template_name = 'AC/drivers.html'
+    filterset_class = ConductoresFilter
     paginate_by = 10
 
 
@@ -320,8 +322,18 @@ class PagosDelete(DeleteView):
     success_url = reverse_lazy('pagos')
 
 
-# class FilteredPagosListView(SingleTableMixin, FilterView):
-#     table_class = PagosTable
-#     model = Pagos
-#     template_name = "AC/payments.html"
-#     filterset_class = PagosFilter
+class HomeView(ListView):
+    context_object_name = 'home'
+    template_name = 'AC/home.html'
+    model = Carros
+
+    def get_context_data(self, **kwargs):
+        context = super(HomeView, self).get_context_data(**kwargs)
+        context['estatusactivos'] = Carros.objects.aggregate(
+            activos=Count(Case(When(is_active=True, then=1))))
+        context['estatusinactivos'] = Carros.objects.aggregate(
+            inactivos=Count(Case(When(is_active=False, then=1))))
+        context['totaldecarros'] = Carros.objects.all()
+        context['pagos'] = Pagos.objects.all()
+        context['Gasots'] = Gasto.objects.all()
+        return context

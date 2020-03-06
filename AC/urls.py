@@ -4,16 +4,16 @@ from . import views
 from django.conf.urls.static import static
 from django_filters.views import FilterView
 from .filters import PagosFilter
-from .models import Pagos
+from .models import Pagos, Conductores
 
 from . import filters
 
 urlpatterns = [
     path('', views.index, name='index'),
-    # path('conductores_sort/',
-    #      views.conductores_sort.as_view(), name='conductores_sort'),
+    path('home/', views.HomeView.as_view(), name='home'),
     path('conductores_list/', views.conductores),
-    path('drivers/', views.ConductoresListView.as_view(), name='conductores'),
+    path('drivers/', views.ConductoresListView.as_view(model=Conductores),
+         name='conductores'),
     path('drivers/add/', views.ConductoresCreate.as_view(), name='conductor_new'),
     path('drivers/<int:pk>/',
          views.ConductoresUpdate.as_view(), name='conductor_edit'),

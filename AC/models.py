@@ -30,6 +30,10 @@ class Conductores(models.Model):
     def get_absolute_url(self):
         return reverse('conductores')
 
+    @property
+    def full_name(self):
+        return '{0} {1}'.format(self.nombres, self.apellidos)
+
 
 class Propietarios(models.Model):
 
@@ -83,6 +87,7 @@ class Polizas(models.Model):
 
     nombre = models.CharField(max_length=30, blank=True, null=True)
     numero = models.CharField(max_length=30, unique=True)
+    aseguradora = models.CharField(max_length=20, blank=True, null=True)
     carro = models.ForeignKey(
         Carros, on_delete=models.CASCADE, blank=True, null=True)
     inicio_poliza = models.DateField(
@@ -167,6 +172,8 @@ class Pagos(models.Model):
         auto_now=False, auto_now_add=False, blank=True, null=True)
     renta = models.ForeignKey(
         Renta, on_delete=models.PROTECT, blank=False, null=False)
+    imagen = models.ImageField(
+        upload_to='pictures', blank=True, null=True, verbose_name='Imagen')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -178,6 +185,9 @@ class Pagos(models.Model):
 
     def __str__(self):
         return self.semana
+
+    # def filename(self):
+    #     return os.path.basename(self.image.name)
 
 
 class Inactividad(models.Model):

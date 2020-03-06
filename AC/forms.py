@@ -45,7 +45,7 @@ class EditCarros(forms.ModelForm):
 class PostPolizas(forms.ModelForm):
     class Meta:
         model = Polizas
-        fields = ('nombre', 'numero', 'carro', 'inicio_poliza',
+        fields = ('nombre', 'numero', 'aseguradora', 'carro', 'inicio_poliza',
                   'fin_poliza', 'documento')
         widgets = {'inicio_poliza': forms.DateInput(attrs={'type': 'date'}),
                    'fin_poliza': forms.DateInput(attrs={'type': 'date'})
@@ -55,7 +55,7 @@ class PostPolizas(forms.ModelForm):
 class EditPolizas(forms.ModelForm):
     class Meta:
         model = Polizas
-        fields = ('nombre', 'numero', 'carro', 'inicio_poliza',
+        fields = ('nombre', 'numero', 'aseguradora', 'carro', 'inicio_poliza',
                   'fin_poliza', 'documento')
         widgets = {'inicio_poliza': forms.DateInput(attrs={'type': 'date'}),
                    'fin_poliza': forms.DateInput(attrs={'type': 'date'})
@@ -89,7 +89,7 @@ class PostPagos(forms.ModelForm):
 
     class Meta:
         model = Pagos
-        fields = ('carro', 'pago', 'fecha', 'semana', 'renta')
+        fields = ('carro', 'pago', 'fecha', 'semana', 'renta', 'imagen')
         widgets = {'fecha': forms.DateInput(attrs={'type': 'date'}),
                    'semana': forms.DateInput(attrs={'type': 'week'})
                    }

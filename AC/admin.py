@@ -7,7 +7,6 @@ admin.site.register(Carros)
 admin.site.register(Polizas)
 admin.site.register(Propietarios)
 admin.site.register(TipoGasto)
-admin.site.register(Pagos)
 
 
 admin.site.site_header = "Administracion de Vehículos"
@@ -41,3 +40,11 @@ class InactividadAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Inactividad, InactividadAdmin)
+
+
+class PagosAdmin(admin.ModelAdmin):
+    list_display = ('carro', 'pago', 'semana', 'renta', 'imagen')
+    list_filter = ('semana', 'carro')
+
+
+admin.site.register(Pagos, PagosAdmin)

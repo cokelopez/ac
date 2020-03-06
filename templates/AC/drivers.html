@@ -1,17 +1,25 @@
 {% extends "base.html" %}
-
 {% load static %}
+{% load widget_tweaks %}
 {% load render_table from django_tables2 %}
 
 
 {% block content %}
 <div class="container">
     <h1 class="page-header">Conductores</h1>
-    <p class="pt-3">
-        <a href={% url 'conductor_new' %}><button type="button" class="btn btn-primary" >
+    <form method="get">
+        <h4 style="margin-top: 0"></h4>
+        <div class="row">
+            <div class="form-group col-sm-4 col-md-3 pb-1">
+                {{ filter.form.nombres.label_tag }}
+                {% render_field filter.form.buscar class="form-control" %}
+                <button type="submit" class="btn btn-primary mt-2">Search</button>
+            </div>
+        </div>
 
-            Conductor
-        </button></a>
+    </form>
+    <p class="pt-3">
+        
     </p>
 
     {% render_table table %}

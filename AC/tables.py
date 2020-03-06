@@ -1,21 +1,11 @@
-
+import os
 from django_tables2 import tables, TemplateColumn, LinkColumn
 from django.utils.safestring import mark_safe
+from django.core.exceptions import ValidationError
 import django_tables2 as tables
 from django_tables2.utils import A
 from .models import Conductores, Propietarios, Carros, Polizas, Gasto, Renta, Pagos
-
-
-class ConductoresTable(tables.Table):
-
-    detalles = TemplateColumn(
-        '<a class="btn btn btn-info btn-sm" href="{% url "conductor_edit" record.id %}">Abrir</a>')
-
-    class Meta:
-        model = Conductores
-        template_name = "django_tables2/bootstrap-responsive.html"
-        fields = ("nombres", "apellidos", "telefono")
-        attrs = {"class": "table table-hover table-sm"}
+from django.utils.html import format_html
 
 
 class PropietariosTable(tables.Table):
@@ -32,9 +22,6 @@ class PropietariosTable(tables.Table):
 
 class CarrosTable(tables.Table):
 
-    detalles = TemplateColumn(
-        '<a class="btn btn btn-info btn-sm" href="{% url "carros_edit" record.id %}">Abrir</a>')
-
     class Meta:
         model = Carros
         template_name = "django_tables2/bootstrap-responsive.html"
@@ -42,22 +29,10 @@ class CarrosTable(tables.Table):
         attrs = {"class": "table table-hover table-sm"}
 
 
-class PolizasTable(tables.Table):
-
-    detalles = TemplateColumn(
-        '<a class="btn btn btn-info btn-sm" href="{% url "poliza_edit" record.id %}">Abrir</a>')
-
-    class Meta:
-        model = Polizas
-        template_name = "django_tables2/bootstrap-responsive.html"
-        fields = ("nombre", "numero", "carro")
-        attrs = {"class": "table table-hover table-sm"}
-
-
 class GastosTable(tables.Table):
 
     detalles = TemplateColumn(
-        '<a class="btn btn btn-info btn-sm" href="{% url "gasto_edit" record.id %}">Abrir</a>')
+        '<a class="btn btn btn-info btn-sm" href="{% url "gasto_edit" record.id %}">Editar</a>')
 
     class Meta:
         model = Gasto
@@ -78,10 +53,37 @@ class PagosTable(tables.Table):
         attrs = {"class": "table table-hover table-sm"}
 
 
+class ImageColumn(tables.Column):
+
+    def render(self, value):
+        return format_html('<a href="/media/{0}" download>{0}</a>', value)
+
+
 class PagosDetailTable(tables.Table):
+    imagen = ImageColumn()
 
     class Meta:
         model = Pagos
         template_name = "django_tables2/bootstrap-responsive.html"
         fields = ('carro', 'semana', 'fecha', 'pago')
+        attrs = {"class": "table table-hover table-sm"}
+
+
+class ConductoresTable(tables.Table):
+
+    ine = ImageColumn()
+
+    class Meta:
+        model = Conductores
+        template_name = "django_tables2/bootstrap-responsive.html"
+        fields = ('nombres', 'apellidos', 'telefono', 'edad')
+        attrs = {"class": "table table-hover table-sm"}
+
+
+class PolizasTable(tables.Table):
+
+    class Meta:
+        model = Polizas
+        template_name = "django_tables2/bootstrap-responsive.html"
+        fields = ("nombre", "numero", 'aseguradora', "carro", 'documento')
         attrs = {"class": "table table-hover table-sm"}
