@@ -66,6 +66,8 @@ class PostGasto(forms.ModelForm):
     class Meta:
         model = Gasto
         fields = ('monto', 'iva', 'fecha', 'gasto', 'carro', 'factura')
+        widgets = {'fecha': forms.DateInput(attrs={'type': 'date'})
+                   }
 
 
 class EditGasto(forms.ModelForm):

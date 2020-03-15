@@ -69,7 +69,8 @@ class Carros(models.Model):
     conductor = models.ForeignKey(
         Conductores, on_delete=models.SET_NULL, blank=True, null=True)
     propietario = models.ForeignKey(Propietarios, on_delete=models.CASCADE)
-    is_active = models.BooleanField(blank=False, null=False, default=True)
+    is_active = models.BooleanField(
+        blank=False, null=False, default=True, verbose_name='Activo')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

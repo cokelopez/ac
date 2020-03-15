@@ -25,7 +25,7 @@ class CarrosTable(tables.Table):
     class Meta:
         model = Carros
         template_name = "django_tables2/bootstrap-responsive.html"
-        fields = ("nombre", "placa", "conductor")
+        fields = ("nombre", "placa", "modelo", "conductor", "is_active")
         attrs = {"class": "table table-hover table-sm"}
 
 

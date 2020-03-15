@@ -2,50 +2,108 @@
 {% block content %}
 
 <div class="container">
-    <div class="row mt-1">
-        <div class="col-sm-6">
-            <div class="card w-50">
+    <div class="row">
+        <div class="col-md-6 jobs_index_middle_panels">
+            <div class="card w-50 mt-1">
                 <div class="card-body">
                     <h5 class="card-title">Carros</h5>
-                    <div class="tg-wrap">
-                        <table class="tg">
-                            <tr>
-                                <td class="tg-0lax">Carros Activos</td>
-                                <td class="tg-0lax">{{ estatusactivos.activos }}</td>
-                            </tr>
-                            <tr>
-                                <td class="tg-0lax">Carros Inactivos</td>
-                                <td class="tg-0lax">{{ estatusinactivos.inactivos }}</td>
-                            </tr>
-                            <tr>
-                                <td class="tg-0lax">Total</td>
-                                <td class="tg-0lax">{{ totaldecarros.count }}</td>
-                            </tr>
-                        </table>
-                    </div>
-                    <a href="{% url 'carros' %}" class="btn btn-primary">Carros</a>
+
+                    <table class="tg table-responsive-sm">
+                        <tr>
+                            <td><a href="{% url 'carros' %} " class="stretched-link">Carros Activos</a></td>
+                            <td align="right" width="30%">{{ estatusactivos.activos }}</td>
+                        </tr>
+                        <tr>
+                            <td><a href="{% url 'carros' %}" class="stretched-link">Carros Inactivos</a></td>
+                            <td align="right">{{ estatusinactivos.inactivos }}</td>
+                        </tr>
+                        <tr>
+                            <td>Total</td>
+                            <td align="right">{{ totaldecarros.count }}</td>
+                        </tr>
+                    </table>
                 </div>
             </div>
-        </div>
-        <div class="col-sm-6">
-            <div class="card w-50">
+            <div class="card w-50 mt-1 card bg-primary">
                 <div class="card-body">
-                    <h5 class="card-title">Semana Pasada</h5>
-                    <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-                    <a href="#" class="btn btn-primary">Go somewhere</a>
+                    <h5 class="card-title">Resumen de la Semana</h5>
+                    {% comment %} <p>Semana del</p> {% endcomment %}
+                    <p align="center">{{inicio_semana}} al {{fin_semana}}</p>
+                    <table class="tg table-responsive-sm">
+                        <tr>
+                            <td><a href="{% url 'pagos' %}">
+                                    <font color="white">Pagos</font>
+                                </a></td>
+                            <td align="right" width="30%">
+                                <font color="white">${{ pagos }}</font>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><a href="{% url 'gasto' %}">
+                                    <font color="white">Gastos</font>
+                                </a></td>
+                            <td align="right" width="30%">
+                                <font color="white">${{ gastos }}</font>
+                            </td>
+                        </tr>
+
+                    </table>
+
                 </div>
             </div>
         </div>
-        <div class="col-sm-6 mt-1">
-            <div class="card w-50">
-                <div class="card-body">
-                    <h5 class="card-title">Pagos Incompletos</h5>
-                    <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-                    <a href="#" class="btn btn-primary">Go somewhere</a>
-                </div>
-            </div>
+        <div class="col">
+            <canvas id="pagos-grafica" data-url="{% url 'pagos-grafica' %}" width="400" height="400"></canvas>
         </div>
+
+
+
+
     </div>
 </div>
 
+{% endblock %}
+{% block javascript %}
+<script>
+    $(function () {
+
+      var $pagosChart = $("#pagos-grafica");
+      $.ajax({
+        url: $pagosChart.data("url"),
+        success: function (data) {
+
+          var ctx = $pagosChart[0].getContext("2d");
+
+          new Chart(ctx, {
+            type: 'bar',
+            data: {
+              labels: data.labels,
+              datasets: [{
+                label: 'Pagos Semana',
+                backgroundColor: 'green',
+                data: data.data1
+              },{
+                label: 'Gastos Semana',
+                backgroundColor: 'red',
+                data: data.data2
+
+              }]          
+            },
+            options: {
+              responsive: true,
+              legend: {
+                position: 'top',
+              },
+              title: {
+                display: true,
+                text: 'Pagos y Gastos del mes en curso'
+              }
+            }
+          });
+
+        }
+      });
+
+    });
+</script>
 {% endblock %}

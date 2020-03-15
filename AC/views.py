@@ -2,12 +2,12 @@ from django.urls import reverse_lazy
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, get_list_or_404, get_object_or_404
 from django.views.generic import ListView, CreateView, DeleteView, UpdateView, DetailView
+from django.views import View
 from rest_framework.renderers import TemplateHTMLRenderer
 from rest_framework import generics
 from rest_framework.views import APIView
 from rest_framework.response import Response
 import datetime
-from django.db.models import Sum
 from django.db.models.functions import Coalesce
 from .models import Conductores, Carros, Polizas, Propietarios, TipoGasto, Renta, Gasto, Pagos
 from .serializers import ConductoresSerializer, CarrosSerializer, PolizasSerializer, PropietariosSerializer, TipoGastoSerializer, RentasSerializer
@@ -327,6 +327,17 @@ class HomeView(ListView):
     template_name = 'AC/home.html'
     model = Carros
 
+    def semana_anterior(self, hoy):
+        today = hoy
+        weekday = today.weekday()
+        start_delta = datetime.timedelta(days=weekday, weeks=1)
+        lunes = today - start_delta
+        domingo = lunes + datetime.timedelta(days=6)
+        format_lunes = lunes.strftime('%d-%m-%Y')
+        format_domingo = domingo.strftime('%d-%m-%Y')
+        semanapasada = lunes.strftime('%Y-%W')
+        return semanapasada, format_lunes, format_domingo, lunes, domingo
+
     def get_context_data(self, **kwargs):
         context = super(HomeView, self).get_context_data(**kwargs)
         context['estatusactivos'] = Carros.objects.aggregate(
@@ -334,6 +345,40 @@ class HomeView(ListView):
         context['estatusinactivos'] = Carros.objects.aggregate(
             inactivos=Count(Case(When(is_active=False, then=1))))
         context['totaldecarros'] = Carros.objects.all()
-        context['pagos'] = Pagos.objects.all()
-        context['Gasots'] = Gasto.objects.all()
+        hoy = datetime.date.today()
+        semanapasada, format_lunes, format_domingo, lunes, domingo = self.semana_anterior(
+            hoy)
+        context['semana'] = semanapasada
+        context['inicio_semana'] = format_lunes
+        context['fin_semana'] = format_domingo
+        context['pagos'] = Pagos.objects.filter(fecha__range=[lunes, domingo]).aggregate(
+            total=Coalesce(Sum('pago'), 0))['total']
+        context['gastos'] = Gasto.objects.filter(fecha__range=[lunes, domingo]).aggregate(
+            total=Coalesce(Sum('monto'), 0))['total']
         return context
+
+
+class GraficaBarras_Pagos(View):
+
+    def get(self, request):
+        labels = []
+        data1 = []
+        data2 = []
+
+        today = datetime.date.today()
+
+        queryset = Pagos.objects.all().filter(fecha__month=today.month).values(
+            'semana').annotate(PagoTotal=Sum('pago'), GastoTotal=Sum('carro__gasto__monto'))
+        for entry in queryset:
+            labels.append(entry['semana'])
+            data1.append(entry['PagoTotal'])
+            data2.append(entry['GastoTotal'])
+
+        return JsonResponse(data={
+            'labels': labels,
+            'data1': data1,
+            'data2': data2,
+
+        })
+
+        # Pagos.objects.all().filter(fecha__month=today.month).values('semana').annotate(PagoTotal=Sum('pago'), GastoTotal= Sum ('carro__gasto__monto'))

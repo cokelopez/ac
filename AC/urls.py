@@ -11,6 +11,7 @@ from . import filters
 urlpatterns = [
     path('', views.index, name='index'),
     path('home/', views.HomeView.as_view(), name='home'),
+    path('pagos-grafica/', views.GraficaBarras_Pagos.as_view(), name='pagos-grafica'),
     path('conductores_list/', views.conductores),
     path('drivers/', views.ConductoresListView.as_view(model=Conductores),
          name='conductores'),
